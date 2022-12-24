@@ -1,0 +1,8 @@
+{
+    "workbench.colorCustomizations": {
+        "editor.foldBackground": "#ff000000",
+        "activityBar.background": "#4C164D",
+        "titleBar.activeBackground": "#6A1F6C",
+        "titleBar.activeForeground": "#FDF8FD"
+    }
+}
