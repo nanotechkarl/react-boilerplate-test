@@ -21,5 +21,18 @@ const makeSelectSamplePage = () =>
     substate => substate,
   );
 
+const selectSamplePage = state => {
+  // console.log(state);
+  return state.samplePage || initialState;
+};
+
+const makeSelectUsernameSample = () =>
+  createSelector(
+    selectSamplePage,
+    sampleState => sampleState.username,
+  );
+
+export { selectSamplePage, makeSelectUsernameSample };
+
 export default makeSelectSamplePage;
 export { selectSamplePageDomain };
