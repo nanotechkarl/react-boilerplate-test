@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -14,7 +14,10 @@ import { compose } from 'redux';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import makeSelectSamplePage, { makeSelectUsernameSample } from './selectors';
+import makeSelectSamplePage, {
+  makeSelectUsernameSample,
+  makeCatsSelector,
+} from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
@@ -31,8 +34,9 @@ import {
   makeSelectError,
 } from '../App/selectors';
 import ReposList from '../../components/ReposList';
-import { changeUsername } from './actions';
+import { changeUsername, getCatsFetch } from './actions';
 import { loadRepos } from '../App/actions';
+
 export function SamplePage({
   username,
   loading,
@@ -40,9 +44,16 @@ export function SamplePage({
   repos,
   onSubmitForm,
   onChangeUsername,
+  onSubmitCats,
+  cats,
 }) {
   useInjectReducer({ key: 'samplePage', reducer });
   useInjectSaga({ key: 'samplePage', saga });
+
+  useEffect(() => {
+    // When initial state username is not null, submit the form to load repos
+    onSubmitCats();
+  }, []);
 
   const reposListProps = {
     loading,
@@ -87,6 +98,9 @@ export function SamplePage({
           </label>
         </Form>
         <ReposList {...reposListProps} />
+        {cats.map(cat => {
+          return <div key={cat.name}>{cat.name}</div>;
+        })}
       </Section>
     </div>
   );
@@ -99,6 +113,8 @@ SamplePage.propTypes = {
   repos: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
   onSubmitForm: PropTypes.func,
   onChangeUsername: PropTypes.func,
+  onSubmitCats: PropTypes.func,
+  cats: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -107,17 +123,18 @@ const mapStateToProps = createStructuredSelector({
   username: makeSelectUsernameSample(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
+  cats: makeCatsSelector(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-    onChangeUsername: evt => {
-      // console.log('evt :', evt.target.value);
-      return dispatch(changeUsername(evt.target.value));
-    },
+    onChangeUsername: evt => dispatch(changeUsername(evt.target.value)),
     onSubmitForm: evt => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(loadRepos());
+    },
+    onSubmitCats: () => {
+      dispatch(getCatsFetch());
     },
   };
 }

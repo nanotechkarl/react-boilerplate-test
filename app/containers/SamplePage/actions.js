@@ -4,7 +4,12 @@
  *
  */
 
-import { DEFAULT_ACTION, CHANGE_USERNAME } from './constants';
+import {
+  DEFAULT_ACTION,
+  CHANGE_USERNAME,
+  GET_CATS_FETCH,
+  GET_CATS_SUCCESS,
+} from './constants';
 
 export function defaultAction() {
   return {
@@ -23,5 +28,18 @@ export function changeUsername(username) {
   return {
     type: CHANGE_USERNAME,
     username,
+  };
+}
+
+export function getCatsFetch() {
+  return {
+    type: GET_CATS_FETCH,
+  };
+}
+
+export function getCatsSuccess(cats) {
+  return {
+    type: GET_CATS_SUCCESS,
+    cats,
   };
 }

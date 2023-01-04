@@ -21,10 +21,7 @@ const makeSelectSamplePage = () =>
     substate => substate,
   );
 
-const selectSamplePage = state => {
-  // console.log(state);
-  return state.samplePage || initialState;
-};
+const selectSamplePage = state => state.samplePage || initialState;
 
 const makeSelectUsernameSample = () =>
   createSelector(
@@ -32,7 +29,13 @@ const makeSelectUsernameSample = () =>
     sampleState => sampleState.username,
   );
 
-export { selectSamplePage, makeSelectUsernameSample };
+const makeCatsSelector = () =>
+  createSelector(
+    selectSamplePage,
+    sampleState => sampleState.cats,
+  );
+
+export { selectSamplePage, makeSelectUsernameSample, makeCatsSelector };
 
 export default makeSelectSamplePage;
 export { selectSamplePageDomain };
